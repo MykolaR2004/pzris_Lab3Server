@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Список студентов</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+    </style>
+</head>
+<body>
+<h1>Список студентов</h1>
+<button onclick="loadStudents()">Загрузить студентов</button>
+<table id="studentsTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Фамилия</th>
+        <th>Группа</th>
+        <th>Форма оплаты</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Данные будут подставлены здесь -->
+    </tbody>
+</table>
+
+<script>
+    async function loadStudents() {
+        try {
+            const response = await fetch('http://localhost:8080/api/students');
+            const students = await response.json();
+
+            const tbody = document.querySelector('#studentsTable tbody');
+            tbody.innerHTML = ''; // очистить таблицу
+
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                        <td>${student.id}</td>
+                        <td>${student.name}</td>
+                        <td>${student.surname}</td>
+                        <td>${student.studentGroup}</td>
+                        <td>${student.paidForm}</td>
+                    `;
+                tbody.appendChild(row);
+            });
+        } catch (error) {
+            console.error('Ошибка загрузки студентов:', error);
+            alert('Не удалось загрузить данные с сервера.');
+        }
+    }
+</script>
+</body>
+</html>
